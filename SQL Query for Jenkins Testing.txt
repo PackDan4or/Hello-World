@@ -1,0 +1,26 @@
+select mu.[menuName], mu.[menuTitle], mi.[menuItemName], mi.[menuItemTitle], "Item Cre/Alter Date" =
+case
+when mi.crtDt > '2019-05-15' then concat('Created ',convert(varchar(25),mi.crtDt,121))
+when mi.updDt > '2019-05-15' then  concat('Altered ',convert(varchar(25),mi.updDt,121))
+else 'Not Altered'
+end,
+"Attr Cre/Alter Date" =' ', "attributeTag" = ' ', "attributeValue" = ' '
+from [APS].[Menu] mu
+right join [APS].[MenuItem] mi on mi.[assgnMenuId] = mu.assgnMenuId 
+where mi.crtDt > '2019-05-15' or mi.updDt > '2019-05-15'
+
+union
+select mu.[menuName], mu.[menuTitle], mi.[menuItemName], mi.[menuItemTitle], "Item Cre/Alter Date" = ' '
+,
+"Attr Cre/Alter Date" =
+case
+when mia.crtDt > '2019-05-15' then concat('Created ',convert(varchar(25),mia.crtDt,121))
+when mia.updDt > '2019-05-15' then concat('Altered ',convert(varchar(25),mia.updDt,121))
+else 'Not Altered'
+end,
+mia.attributeTag, mia.[attributeValue]
+from [APS].[MenuItemAttribute] mia 
+right join [APS].[MenuItem] mi on mi.[assgnMenuItem] = mia.assgnMenuItem 
+join [APS].[Menu] mu on mu.[assgnMenuId] = mi.assgnMenuId
+where mia.crtDt > '2019-05-15' or 
+mia.updDt > '2019-05-15' 
